@@ -6,7 +6,7 @@ class Adventure
 {
     private Character $character;
     // private Monster $monster;
-    // private Tile $currentTile;
+    private Tile $tile;
     private int $tileCount = 0;
 
     public function __construct() {}
@@ -14,7 +14,7 @@ class Adventure
     public static function start() : self {
         $adventure = new self();
         $adventure->character = Character::make();
-        // $this->monster = Monster::make();
+        $adventure->tile = Tile::make();
 
         return $adventure;
     }
@@ -23,6 +23,7 @@ class Adventure
     {
         return [
             'character' => $this->character->state(),
+            'tile' => $this->tile->state(),
             'tile_count' => $this->tileCount,
         ];
     }

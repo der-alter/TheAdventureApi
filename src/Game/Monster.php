@@ -6,28 +6,28 @@ namespace App\Game;
 
 enum Breed: string
 {
-    case Ghost  = 'ghost';
-    case Goblin = 'goblin';
-    case Ork    = 'ork';
-    case Troll  = 'troll';
+    case GHOST  = 'ghost';
+    case GOBLIN = 'goblin';
+    case ORK    = 'ork';
+    case TROLL  = 'troll';
 
     public function hp(): int
     {
         return match ($this) {
-            Breed::Ghost  => 8,
-            Breed::Goblin => 12,
-            Breed::Ork    => 10,
-            Breed::Troll  => 12,
+            Breed::GHOST  => 8,
+            Breed::GOBLIN => 12,
+            Breed::ORK    => 10,
+            Breed::TROLL  => 12,
         };
     }
 
     public function def(): int
     {
         return match ($this) {
-            Breed::Ghost  => 6,
-            Breed::Goblin => 0,
-            Breed::Ork    => 4,
-            Breed::Troll  => 6,
+            Breed::GHOST  => 6,
+            Breed::GOBLIN => 0,
+            Breed::ORK    => 4,
+            Breed::TROLL  => 6,
         };
     }
 }
