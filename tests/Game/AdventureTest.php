@@ -5,7 +5,16 @@ declare(strict_types=1);
 namespace App\Tests\Game;
 
 use App\Game\Adventure;
+use App\Game\RollerInterface;
 use PHPUnit\Framework\TestCase;
+
+class FakeRoller implements RollerInterface {
+    public function __construct(private int $num) {}
+
+    public function roll(string $dice) : int {
+        return $this->num;
+    }
+}
 
 class AdventureTest extends TestCase
 {
@@ -14,7 +23,7 @@ class AdventureTest extends TestCase
         $adventure = Adventure::start();
         $state     = $adventure->state();
         $this->assertEquals(20, $state['character']['hp']);
-        $this->assertEquals(0, $state['tile_count']);
+        $this->assertEquals(1, $state['tile_count']);
     }
 
     public function testFromState()
@@ -22,9 +31,46 @@ class AdventureTest extends TestCase
         $state = [
             'character'  => ['hp' => 34],
             'tile'       => ['scene' => 'hills', 'monster' => ['breed' => 'goblin', 'hp' => 34]],
-            'tile_count' => 1,
+            'tile_count' => 5,
         ];
         $adventure = Adventure::fromState($state);
         $this->assertEquals($state, $adventure->state());
+    }
+
+    public function testMoveWithDeadMonster()
+    {
+        $state = [
+            'character'  => ['hp' => 34],
+            'tile'       => ['scene' => 'hills', 'monster' => ['breed' => 'goblin', 'hp' => 0]],
+            'tile_count' => 5,
+        ];
+        $adventure = Adventure::fromState($state);
+        $adventure->move((new FakeRoller(4)));
+        $this->assertEquals(6, $adventure->state()['tile_count']);
+    }
+
+    public function testMoveWithMonsterAtk() {
+        $state = [
+            'character'  => ['hp' => 34],
+            'tile'       => ['scene' => 'hills', 'monster' => ['breed' => 'goblin', 'hp' => 12]],
+            'tile_count' => 5,
+        ];
+        $adventure = Adventure::fromState($state);
+        $adventure->move((new FakeRoller(4)));
+        $this->assertEquals(5, $adventure->state()['tile_count']);
+    }
+
+    public function testMoveWithMonsterAtkAndBonus() {
+        $state = [
+            'character'  => ['hp' => 10],
+            'tile'       => ['scene' => 'forest', 'monster' => ['breed' => 'goblin', 'hp' => 12]],
+            'tile_count' => 5,
+        ];
+        $adventure = Adventure::fromState($state);
+        $adventure->move((new FakeRoller(4)));
+        $this->assertEquals(5, $adventure->state()['tile_count']);
+
+        // damage taken (atk + bonus) - def = (4 + 2) - 5
+        $this->assertEquals(9, $adventure->state()['character']['hp']);
     }
 }

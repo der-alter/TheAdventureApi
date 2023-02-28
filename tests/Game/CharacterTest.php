@@ -21,4 +21,14 @@ class CharacterTest extends TestCase
         $character = Character::fromState(...$state);
         $this->assertEquals($state, $character->state());
     }
+
+    public function testTakeDamage()
+    {
+        $state     = ['hp' => 3];
+        $character = Character::fromState(...$state);
+        $character->takeDamage(2);
+        $this->assertEquals(1, $character->hp());
+        $character->takeDamage(-3);
+        $this->assertEquals(1, $character->hp());
+    }
 }

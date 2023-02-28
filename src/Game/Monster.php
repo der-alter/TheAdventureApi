@@ -30,13 +30,22 @@ enum Breed: string
             Breed::TROLL  => 6,
         };
     }
+
+    public function dice(): string
+    {
+        return match ($this) {
+            Breed::GHOST  => '1D4',
+            Breed::GOBLIN => '1D4 -1',
+            Breed::ORK    => '1D6',
+            Breed::TROLL  => '1D6',
+        };
+    }
 }
 
 final class Monster
 {
     private Breed $breed;
     private int $hp;
-    private int $def;
 
     private function __construct()
     {
@@ -47,7 +56,6 @@ final class Monster
         $monster        = new self();
         $monster->breed = Breed::cases()[random_int(0, \count(Breed::cases()) - 1)];
         $monster->hp    = $monster->breed->hp();
-        $monster->def   = $monster->breed->def();
 
         return $monster;
     }
@@ -57,7 +65,6 @@ final class Monster
         $monster        = new self();
         $monster->breed = Breed::from($breed);
         $monster->hp    = $hp;
-        $monster->def   = $monster->breed->def();
 
         return $monster;
     }
@@ -68,5 +75,28 @@ final class Monster
             'breed' => $this->breed->value,
             'hp'    => $this->hp,
         ];
+    }
+
+    public function attack(RollerInterface $roller, Scene $scene): int
+    {
+        $num   = $roller->roll($this->breed()->dice());
+        $bonus = match ($scene) {
+            Scene::GRASSLANDS => Breed::ORK === $this->breed() ? 2 : 0,
+            Scene::HILLS      => Breed::GHOST === $this->breed() ? 2 : 0,
+            Scene::FOREST     => Breed::GOBLIN === $this->breed() ? 2 : 0,
+            Scene::MOUNTAINS  => Breed::TROLL === $this->breed() ? 2 : 0,
+        };
+
+        return $num + $bonus;
+    }
+
+    public function breed(): Breed
+    {
+        return $this->breed;
+    }
+
+    public function hp(): int
+    {
+        return $this->hp;
     }
 }

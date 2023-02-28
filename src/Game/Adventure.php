@@ -10,7 +10,7 @@ class Adventure
     private Tile $tile;
     private int $tileCount = 0;
 
-    public function __construct()
+    private function __construct()
     {
     }
 
@@ -19,6 +19,7 @@ class Adventure
         $adventure            = new self();
         $adventure->character = Character::make();
         $adventure->tile      = Tile::make();
+        ++$adventure->tileCount;
 
         return $adventure;
     }
@@ -40,5 +41,16 @@ class Adventure
             'tile'       => $this->tile->state(),
             'tile_count' => $this->tileCount,
         ];
+    }
+
+    public function move(RollerInterface $roller): void
+    {
+        if (false === $this->tile->isMonsterAlive()) {
+            ++$this->tileCount;
+            $this->tile = Tile::make();
+        } else {
+            $monsterAtk = $this->tile->monsterAtk($roller);
+            $this->character->takeDamage($monsterAtk - $this->character->def());
+        }
     }
 }

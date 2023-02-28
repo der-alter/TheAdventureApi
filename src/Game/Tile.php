@@ -44,4 +44,13 @@ final class Tile
             'monster' => $this->monster->state(),
         ];
     }
+
+    public function isMonsterAlive(): bool
+    {
+        return $this->monster->hp() > 0;
+    }
+
+    public function monsterAtk(RollerInterface $roller) : int {
+        return $this->monster->attack($roller, $this->scene);
+    }
 }
