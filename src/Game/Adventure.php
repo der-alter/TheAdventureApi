@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-use App\Game\Exception\CoulNotMove;
+use App\Game\Exception\CouldNotMove;
+use App\Game\Exception\CouldNotAttack;
 
 class Adventure
 {
@@ -59,23 +60,24 @@ class Adventure
      */
     public function move(RollerInterface $roller): void
     {
-        if (true === $this->monster->alive()) {
-            $atk   = $this->monster->roll($roller);
-            $bonus = $this->monster->bonus($this->tile->scene());
-
-            $this->character->takeAtk($atk + $bonus);
-        }
-
-        if (true === $this->monster->alive() && Scene::SWAMP === $this->tile->scene()) {
-            throw CoulNotMove::fromSwamp();
-        }
-
+        $this->monster->attack($roller, $this->tile->scene(), $this->character);
         $this->character->takeDamage($this->tile->damage());
         $this->nextTile();
     }
 
+    public function attack(RollerInterface $roller): void {
+        if ($this->monster->alive() === false) {
+            throw CouldNotAttack::fromDeadMonster();
+        }
+        $this->character->attack($roller, $this->monster);
+    }
+
     private function nextTile(): void
     {
+        if (true === $this->monster->alive() && Scene::SWAMP === $this->tile->scene()) {
+            throw CouldNotMove::fromSwamp();
+        }
+
         if (self::NB_TILES_BEFORE_BOSS === $this->tileCount) {
             $this->tile = Tile::make();
         } else {

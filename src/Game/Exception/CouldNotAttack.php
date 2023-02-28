@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Game\Exception;
 
-final class CoulNotAttack extends \Exception
+final class CouldNotAttack extends \Exception
 {
-    public static function noMonster(): self
+    public static function fromDeadMonster(): self
     {
-        return new self('No monster to attack');
+        return new self('Monster is dead');
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Game\Exception;
 
-final class CoulNotMove extends \Exception
+final class CouldNotMove extends \Exception
 {
     public static function fromSwamp(): self
     {

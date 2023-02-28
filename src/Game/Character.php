@@ -36,8 +36,15 @@ final class Character
         ];
     }
 
-    public function takeAtk(int $atk) : void {
-       $this->takeDamage($atk - $this->def);
+    public function attack(RollerInterface $roller, Monster $monster): void
+    {
+        $atk   = $roller->roll($this->dice);
+        $monster->takeDamage($monster->fight($atk));
+    }
+
+    public function fight(int $atk): int
+    {
+        return $atk - $this->def;
     }
 
     public function takeDamage(int $damage): void
@@ -45,6 +52,11 @@ final class Character
         if ($damage > 0) {
             $this->hp -= $damage;
         }
+    }
+
+    public function heal()
+    {
+        ++$this->hp;
     }
 
     public function roll(RollerInterface $roller)
