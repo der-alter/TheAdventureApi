@@ -21,8 +21,8 @@ final class Character
 
     public static function fromState(int $hp, int $def): self
     {
-        $character     = new self();
-        $character->hp = $hp;
+        $character      = new self();
+        $character->hp  = $hp;
         $character->def = $def;
 
         return $character;
@@ -31,7 +31,7 @@ final class Character
     public function state()
     {
         return [
-            'hp' => $this->hp,
+            'hp'  => $this->hp,
             'def' => $this->def,
         ];
     }

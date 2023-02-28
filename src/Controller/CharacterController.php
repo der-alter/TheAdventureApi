@@ -24,7 +24,7 @@ class CharacterController extends AbstractController
     #[Route('/character/{id}/action/move', name: 'app_character_move', methods: ['POST'])]
     public function move(int $id): JsonResponse
     {
-        $session = $this->sessionRepository->find($id);
+        $session   = $this->sessionRepository->find($id);
         $adventure = Adventure::fromState($session->getState());
         $adventure->move($this->roller);
 

@@ -41,7 +41,8 @@ final class Tile
         ];
     }
 
-    public function scene() : Scene {
+    public function scene(): Scene
+    {
         return $this->scene;
     }
 }

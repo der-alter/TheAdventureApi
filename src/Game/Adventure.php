@@ -62,7 +62,7 @@ class Adventure
             $this->character->takeDamage($monsterAtk);
         }
 
-        if (true === $this->monster->alive() && $this->tile->scene() === Scene::SWAMP) {
+        if (true === $this->monster->alive() && Scene::SWAMP === $this->tile->scene()) {
             throw CoulNotMove::fromSwamp();
         }
 

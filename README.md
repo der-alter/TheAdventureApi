@@ -19,6 +19,8 @@ An [adminer](http://localhost:8080/?server=db&username=root&db=app) is available
 
 The default configuration use a database named `app` and the user `root` with password `secret`.
 
-Run `symfony serve -d` to run the app.
+Run `symfony serve -d` to run the app (watch logs with `symfony server:log`).
 
 Run tests with `./vendor/bin/phpunit --testdox`
+
+Run cs fixer with `composer cs-fix`
