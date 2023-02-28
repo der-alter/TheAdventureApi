@@ -18,6 +18,7 @@ Follow-up:
 - The Adventure class isn't used as a service, but it probably should transformed into one
 - Point above should lead to clean up the controllers and move the persistence to the new service
 - There are no functional tests
+- There are no logs
 
 ## Requirements
 
