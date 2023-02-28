@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Game;
 
+use App\Game\Exception\CoulNotMove;
+
 class Adventure
 {
     private const NB_TILES_BEFORE_BOSS = 10;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Game\Adventure;
+use App\Game\Exception\CoulNotMove;
 use App\Game\RollerInterface;
 use App\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,12 +27,17 @@ class CharacterController extends AbstractController
     {
         $session   = $this->sessionRepository->find($id);
         $adventure = Adventure::fromState($session->getState());
-        $adventure->move($this->roller);
 
-        $session->setState($adventure->state());
-        $this->em->persist($session);
-        $this->em->flush();
+        try {
+            $adventure->move($this->roller);
 
-        return $this->json($session);
+            $session->setState($adventure->state());
+            $this->em->persist($session);
+            $this->em->flush();
+
+            return $this->json($session);
+        } catch (CoulNotMove $e) {
+            return $this->json(['message' => $e->getMessage()], 400);
+        }
     }
 }

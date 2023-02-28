@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Game;
+namespace App\Game\Exception;
 
 final class CoulNotAttack extends \Exception
 {
