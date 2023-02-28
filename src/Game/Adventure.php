@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Game;
 
-use App\Game\Exception\CouldNotMove;
 use App\Game\Exception\CouldNotAttack;
+use App\Game\Exception\CouldNotMove;
+use App\Game\Exception\CouldNotRest;
 
 class Adventure
 {
@@ -15,6 +16,7 @@ class Adventure
     private Monster $monster;
     private Tile $tile;
     private int $tileCount = 0;
+    private int $healCount = 0;
     private int $score     = 0;
 
     private function __construct()
@@ -39,6 +41,7 @@ class Adventure
         $adventure->monster   = Monster::fromState(...$state['monster']);
         $adventure->tile      = Tile::fromState(...$state['tile']);
         $adventure->tileCount = $state['tile_count'];
+        $adventure->healCount = $state['heal_count'];
         $adventure->score     = $state['score'];
 
         return $adventure;
@@ -51,6 +54,7 @@ class Adventure
             'monster'    => $this->monster->state(),
             'tile'       => $this->tile->state(),
             'tile_count' => $this->tileCount,
+            'heal_count' => $this->healCount,
             'score'      => $this->score,
         ];
     }
@@ -65,11 +69,24 @@ class Adventure
         $this->nextTile();
     }
 
-    public function attack(RollerInterface $roller): void {
-        if ($this->monster->alive() === false) {
+    /**
+     *  @throws CouldNotAttack
+     */
+    public function attack(RollerInterface $roller): void
+    {
+        if (false === $this->monster->alive()) {
             throw CouldNotAttack::fromDeadMonster();
         }
         $this->character->attack($roller, $this->monster);
+    }
+
+    public function rest(): void
+    {
+        if (false === $this->monster->alive() || $this->healCount > 0) {
+            throw CouldNotRest::alreadyRested();
+        }
+
+        $this->character->heal();
     }
 
     private function nextTile(): void
@@ -82,7 +99,8 @@ class Adventure
             $this->tile = Tile::make();
         } else {
             ++$this->tileCount;
-            $this->tile = Tile::make();
+            $this->healCount = 0;
+            $this->tile      = Tile::make();
         }
     }
 }

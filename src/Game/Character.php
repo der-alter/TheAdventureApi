@@ -56,7 +56,7 @@ final class Character
 
     public function heal()
     {
-        ++$this->hp;
+        $this->hp += 2;
     }
 
     public function roll(RollerInterface $roller)

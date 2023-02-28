@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Game\Adventure;
 use App\Game\Exception\CouldNotAttack;
 use App\Game\Exception\CouldNotMove;
+use App\Game\Exception\CouldNotRest;
 use App\Game\RollerInterface;
 use App\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,6 +58,25 @@ class CharacterController extends AbstractController
 
             return $this->json($session);
         } catch (CouldNotAttack $e) {
+            return $this->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    #[Route('/character/{id}/action/rest', name: 'app_character_rest', methods: ['POST'])]
+    public function rest(int $id): JsonResponse
+    {
+        $session   = $this->sessionRepository->find($id);
+        $adventure = Adventure::fromState($session->getState());
+
+        try {
+            $adventure->rest();
+
+            $session->setState($adventure->state());
+            $this->em->persist($session);
+            $this->em->flush();
+
+            return $this->json($session);
+        } catch (CouldNotRest $e) {
             return $this->json(['message' => $e->getMessage()], 400);
         }
     }
