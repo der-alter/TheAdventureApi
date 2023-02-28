@@ -24,7 +24,7 @@ class AdventureController extends AbstractController
     public function index(): JsonResponse
     {
         $adventure = Adventure::start();
-        $session   = (new Session)->setState($adventure->state());
+        $session   = (new Session())->setState($adventure->state());
         $this->em->persist($session);
         $this->em->flush();
 

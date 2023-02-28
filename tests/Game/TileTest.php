@@ -14,12 +14,11 @@ class TileTest extends TestCase
         $tile  = Tile::make();
         $state = $tile->state();
         $this->assertArrayHasKey('scene', $state);
-        $this->assertArrayHasKey('monster', $state);
     }
 
     public function testFromState()
     {
-        $state = ['scene'=> 'hills', 'monster'=> ['breed' => 'goblin', 'hp' => 34]];
+        $state = ['scene'=> 'hills'];
         $tile  = Tile::fromState(...$state);
         $this->assertEquals($state, $tile->state());
     }

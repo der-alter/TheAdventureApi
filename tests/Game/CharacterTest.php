@@ -12,23 +12,31 @@ class CharacterTest extends TestCase
     public function testMake()
     {
         $character = Character::make();
-        $this->assertEquals(['hp'=>20], $character->state());
+        $this->assertEquals(['hp'=>20, 'def' => 5], $character->state());
     }
 
     public function testFromState()
     {
-        $state     = ['hp' => 34];
+        $state     = ['hp' => 34, 'def' => 5];
         $character = Character::fromState(...$state);
         $this->assertEquals($state, $character->state());
     }
 
-    public function testTakeDamage()
+    /**
+     * @dataProvider provideDamage
+     */
+    public function testTakeDamage(array $state, int $atk, int $expected)
     {
-        $state     = ['hp' => 3];
         $character = Character::fromState(...$state);
-        $character->takeDamage(2);
-        $this->assertEquals(1, $character->hp());
-        $character->takeDamage(-3);
-        $this->assertEquals(1, $character->hp());
+        $character->takeDamage($atk);
+        $this->assertEquals($expected, $character->state()['hp']);
     }
+
+    public static function provideDamage()
+        {
+            return [
+                [['hp' => 3, 'def' => 5], 6, 2],
+                [['hp' => 3, 'def' => 5], 7, 1],
+            ];
+        }
 }

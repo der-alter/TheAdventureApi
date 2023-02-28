@@ -19,10 +19,11 @@ final class Character
         return new self();
     }
 
-    public static function fromState(int $hp): self
+    public static function fromState(int $hp, int $def): self
     {
         $character     = new self();
         $character->hp = $hp;
+        $character->def = $def;
 
         return $character;
     }
@@ -31,32 +32,21 @@ final class Character
     {
         return [
             'hp' => $this->hp,
+            'def' => $this->def,
         ];
     }
 
-    public function hp(): int
+    public function takeDamage(int $atk): void
     {
-        return $this->hp;
-    }
+        $damage = $atk - $this->def;
 
-    public function def(): int
-    {
-        return $this->def;
-    }
-
-    public function dice(): string
-    {
-        return $this->dice;
-    }
-
-    public function takeDamage(int $damage): void
-    {
         if ($damage > 0) {
             $this->hp -= $damage;
         }
     }
 
-    public function roll(RollerInterface $roller) {
+    public function roll(RollerInterface $roller)
+    {
         return $roller->roll($this->dice);
     }
 }
