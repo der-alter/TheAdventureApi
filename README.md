@@ -22,6 +22,7 @@ Follow-up:
 - Point above should lead to clean up the controllers and move the persistence to the new service
 - There are no functional tests
 - There are no logs
+- decouple controllers from Symfony AbstractController
 
 ## Requirements
 
