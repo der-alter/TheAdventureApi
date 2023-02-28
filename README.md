@@ -6,6 +6,9 @@ Old-school RPG Mini game API
 
 The data model is very simple as there is only one entity, the [Session](./src/Entity/Session.php).
 
+I though that having an unique identifier for the character was unneeded, as there is a one to one relation
+between the adventure and the character. So I cheated by merging the adventure id and the character id.
+
 An adventure state is then entirely managed via the `state` field of the `session` table, which is of type `json`.
 
 The Game is composed by a main [Adventure](./src/Game/Adventure.php) class that is the only object manipulated in the
