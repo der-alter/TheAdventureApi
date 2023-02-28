@@ -77,18 +77,9 @@ final class Monster
         ];
     }
 
-    public function attack(RollerInterface $roller, Scene $scene): int
+    public function roll(RollerInterface $roller): int
     {
-        $num   = $roller->roll($this->breed->dice());
-        $bonus = match ($scene) {
-            Scene::GRASSLANDS => Breed::ORK === $this->breed ? 2 : 0,
-            Scene::HILLS      => Breed::GHOST === $this->breed ? 2 : 0,
-            Scene::FOREST     => Breed::GOBLIN === $this->breed ? 2 : 0,
-            Scene::MOUNTAINS  => Breed::TROLL === $this->breed ? 2 : 0,
-            default           => 0,
-        };
-
-        return $num + $bonus;
+        return $roller->roll($this->breed->dice());
     }
 
     public function takeDamage(int $damage): void
@@ -101,5 +92,15 @@ final class Monster
     public function alive(): bool
     {
         return $this->hp > 0;
+    }
+
+    public function bonus(Scene $scene) : int {
+        return match ($scene) {
+            Scene::GRASSLANDS => Breed::ORK === $this->breed ? 2 : 0,
+            Scene::HILLS      => Breed::GHOST === $this->breed ? 2 : 0,
+            Scene::FOREST     => Breed::GOBLIN === $this->breed ? 2 : 0,
+            Scene::MOUNTAINS  => Breed::TROLL === $this->breed ? 2 : 0,
+            default           => 0,
+        };
     }
 }

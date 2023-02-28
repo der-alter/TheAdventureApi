@@ -40,4 +40,23 @@ class CharacterController extends AbstractController
             return $this->json(['message' => $e->getMessage()], 400);
         }
     }
+
+    #[Route('/character/{id}/action/attack', name: 'app_character_attack', methods: ['POST'])]
+    public function attack(int $id): JsonResponse
+    {
+        $session   = $this->sessionRepository->find($id);
+        $adventure = Adventure::fromState($session->getState());
+
+        try {
+            $adventure->move($this->roller);
+
+            $session->setState($adventure->state());
+            $this->em->persist($session);
+            $this->em->flush();
+
+            return $this->json($session);
+        } catch (CoulNotMove $e) {
+            return $this->json(['message' => $e->getMessage()], 400);
+        }
+    }
 }

@@ -45,4 +45,12 @@ final class Tile
     {
         return $this->scene;
     }
+
+    public function damage(): int
+    {
+        return match ($this->scene) {
+            Scene::DESERT => 1,
+            default       => 0
+        };
+    }
 }

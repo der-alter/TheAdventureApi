@@ -36,10 +36,12 @@ final class Character
         ];
     }
 
-    public function takeDamage(int $atk): void
-    {
-        $damage = $atk - $this->def;
+    public function takeAtk(int $atk) : void {
+       $this->takeDamage($atk - $this->def);
+    }
 
+    public function takeDamage(int $damage): void
+    {
         if ($damage > 0) {
             $this->hp -= $damage;
         }

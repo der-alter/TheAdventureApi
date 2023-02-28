@@ -60,14 +60,17 @@ class Adventure
     public function move(RollerInterface $roller): void
     {
         if (true === $this->monster->alive()) {
-            $monsterAtk = $this->monster->attack($roller, $this->tile->scene());
-            $this->character->takeDamage($monsterAtk);
+            $atk   = $this->monster->roll($roller);
+            $bonus = $this->monster->bonus($this->tile->scene());
+
+            $this->character->takeAtk($atk + $bonus);
         }
 
         if (true === $this->monster->alive() && Scene::SWAMP === $this->tile->scene()) {
             throw CoulNotMove::fromSwamp();
         }
 
+        $this->character->takeDamage($this->tile->damage());
         $this->nextTile();
     }
 

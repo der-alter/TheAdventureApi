@@ -33,10 +33,28 @@ class CharacterTest extends TestCase
     }
 
     public static function provideDamage()
-        {
-            return [
-                [['hp' => 3, 'def' => 5], 6, 2],
-                [['hp' => 3, 'def' => 5], 7, 1],
-            ];
-        }
+    {
+        return [
+            'take positive damage' => [['hp' => 8, 'def' => 5], 6, 2],
+            'take negative damage' => [['hp' => 3, 'def' => 5], -4, 3],
+        ];
+    }
+
+    /**
+     * @dataProvider provideAtk
+     */
+    public function testTakeAtk(array $state, int $atk, int $expected)
+    {
+        $character = Character::fromState(...$state);
+        $character->takeAtk($atk);
+        $this->assertEquals($expected, $character->state()['hp']);
+    }
+
+    public static function provideAtk()
+    {
+        return [
+            [['hp' => 3, 'def' => 5], 6, 2],
+            [['hp' => 3, 'def' => 5], 7, 1],
+        ];
+    }
 }
